@@ -19,7 +19,7 @@
       "browserName": "chrome"
     },
     "reporter": {
-      "launchReport": true,
+      "launchReport": false,
       "reportType": "single",
       "takeScreenShot": true
     },
@@ -36,6 +36,7 @@
     }
   },
   "scripts": {
+    "debug": "node $NODE_DEBUG_OPTION server.js --debug --environment local",
     "lint": "eslint --ext=.js . || true",
     "jsdoc": "jsdoc . -c jsdoc-config.js",
     "gridUp": "docker-compose -H tcp://10.248.153.240:2376 --tls -f ./config/selenium-grid.yaml up -d --scale chrome=74 --scale firefox=1",
