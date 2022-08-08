@@ -19,7 +19,7 @@
       "browserName": "chrome"
     },
     "reporter": {
-      "launchReport": false,
+      "launchReport": true,
       "reportType": "single",
       "takeScreenShot": true
     },

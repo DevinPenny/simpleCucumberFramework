@@ -282,7 +282,7 @@ async function switchToNextTab(world) {
  * @return {Promise} [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the page being visited has the expected title.
  */
 async function navigateToPage(world, url, title = '', wait = 1, ignoreUrl = false) {
-    await world.driver.manage().window().maximize();
+    // await world.driver.manage().window().maximize();
     await world.driver.get(url);
     //Give the browser a few seconds to open and load the page.
     await world.driver.sleep(1000 * wait);

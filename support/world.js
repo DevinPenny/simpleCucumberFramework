@@ -1,8 +1,7 @@
 const webdriver = require('selenium-webdriver');
-// const remote = require('selenium-webdriver/remote');
+const remoteWebDriver = require('selenium-webdriver/remote');
 const config = require('../package.json').config;
 const {setWorldConstructor, setDefaultTimeout} = require('@cucumber/cucumber');
-
 
 
 const buildDriver = () => {
@@ -54,7 +53,7 @@ function CustomWorld({attach, parameters}) {
     this.attach = attach;
     this.config = config;
     this.driver = buildDriver();
-    // this.driver.setFileDetector(new remote.FileDetector());
+    this.driver.setFileDetector(new remoteWebDriver.FileDetector());
     this.application = config.test.application;
     this.environment = config.test.environment;
     //Load Environment Data

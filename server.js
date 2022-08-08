@@ -23,7 +23,7 @@ const multiReporter = require('./reports/multiReporter');
  including user and password information, testRail project information*/
 let world;
 
-/**create a properly formatted string of tags to run cucumber with. Proper format: --tags '(@CPXU000137 or @CPXU00033)' */
+/**create a properly formatted string of tags to run cucumber with. Proper format: --tags '(@TEST1 or @TEST2)' */
 let tagString;
 if (argopts.hasOwnProperty('tags')) {
 
@@ -77,12 +77,6 @@ const keys = [];
 if (config.grid.parallel) keys.push('parallel');
 if (config.debug) keys.push('debug');
 
-/** ensure that we do not run locally with too many parallels **/
-//TODO: fix this
-// if (!config.grid.useGrid) {
-//     console.info('Setting parallel to 1 so we do not overwhelm users laptop!');
-//     config.grid.parallel = '1';
-// }
 
 if (argopts.testrail) {
     console.info('Updating testRail based on command line input testrail = true');
