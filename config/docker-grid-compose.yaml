@@ -1,0 +1,44 @@
+version: "3"
+services:
+  selenium-hub:
+    image: "selenium/hub"
+    container_name: "selenium-hub"
+    ports:
+      - 4444:4444
+    environment:
+      - "GRID_MAX_SESSION=10"
+      - "TZ=America/New_York"
+  chrome-1:
+    image: "selenium/node-chrome-debug"
+    container_name: "selenium-node-chrome-debug-1"
+    depends_on:
+      - "selenium-hub"
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - "HUB_PORT_4444_TCP_ADDR=selenium-hub"
+      - "HUB_PORT_4444_TCP_PORT=4444"
+      - "NODE_MAX_INSTANCES=5"
+      - "NODE_MAX_SESSION=5"
+      - "SCREEN_WIDTH=1400"
+      - "SCREEN_HEIGHT=900"
+      - "TZ=America/New_York"
+    ports:
+      - 5901:5900
+  firefox-1:
+    image: "selenium/node-firefox-debug"
+    container_name: "selenium-node-firefox-debug-1"
+    depends_on:
+      - "selenium-hub"
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - "HUB_PORT_4444_TCP_ADDR=selenium-hub"
+      - "HUB_PORT_4444_TCP_PORT=4444"
+      - "NODE_MAX_INSTANCES=5"
+      - "NODE_MAX_SESSION=5"
+      - "SCREEN_WIDTH=1400"
+      - "SCREEN_HEIGHT=900"
+      - "TZ=America/New_York"
+    ports:
+      - 5911:5900

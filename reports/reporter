@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+const reporter = require('cucumber-html-reporter');
+const argopts = require('yargs').parse(process.argv);
+const timestamp = argopts.timestamp;
+const {get} = require('lodash');
+/**
+ * Instance of the [config]{@link module:config}.
+ *
+ * @memberOf module:reporter
+ */
+
+const config = get(argopts, 'config', false) ? //Check if argopts has the config object
+    JSON.parse(get(argopts, 'config')) : //<-- parse the config object that was passed to by server.js
+    require('../package').config;              // Otherwise use the config object in package.json (unlikely case)
+
+/**
+ * The options used for the [Cucumber HTML Reporter]{@link https://npmjs.com/package/cucumber-html-reporter} output.
+ *
+ * @property {boolean} launchReport - Whether to open the report output in the default browser or not.
+ * @property {boolean} storeScreenshots - Whether to save screenshots or not.
+ * @property {string} screenshotsDirectory - Path to store screenshots under.
+ * @property {string} name - The report name at the top center of the report.
+ * @property {string} brandTitle - The branding at the top left of the report.
+ * @property {object} metadata - An object of `'Heading': 'Content'` pairs displayed in the collapsible *Metadata* section of the report.
+ * @property {string} theme- The named layout used for the report.
+ * @property {string} jsonFile - The [Cucumber]{@link https://github.com/cucumber/cucumber-js} output to be parsed.
+ * @property {string} output - The path and filename for the final report output.
+ * @memberOf module:reporter
+ */
+const options = {
+    launchReport: config.reporter.launchReport,
+    storeScreenshots: config.reporter.storeScreenshots || false,
+    screenshotsDirectory: (config.reporter.screenshotsDirectory)
+        ? `./${config.reporter.screenshotsDirectory}`
+        : './reports/screenshots/',
+    name: config.reporter.name || `Test Results for ${config.test.application.toUpperCase()} Project`,
+    brandTitle: config.reporter.brandTitle || 'QA Automation Testing Framework',
+    metadata: config.reporter.metadata,
+    theme: config.reporter.theme || 'bootstrap',
+    jsonFile: `./reports/json/results.json`,
+    output: `./reports/html/${config.test.application}-${timestamp}.html`,
+};
+
+/**
+ * Parses the [Cucumber]{@link https://github.com/cucumber/cucumber-js} output using the [Cucumber HTML Reporter]{@link https://npmjs.com/package/cucumber-html-reporter} module to generate a pretty HTML report that both summarizes the results as well as drills down to details for each failure.
+ *
+ * Also utilizes [Slack Incoming Webhooks]{@link https://api.slack.com/incoming-webhooks} to notify personnel of test results under configured circumstances.
+ *
+ * @requires module:cucumber-html-reporter
+ * @requires module:package
+ * @requires module:fs
+ * @requires module:config
+ * @module module:reporter
+ */
+reporter.generate(options, (error) => process.exit((error) ? error.length : 0));
