@@ -1,5 +1,5 @@
 const webdriver = require('selenium-webdriver');
-const remoteWebDriver = require('selenium-webdriver/remote');
+// const remoteWebDriver = require('selenium-webdriver/remote');
 const config = require('../package.json').config;
 const {setWorldConstructor, setDefaultTimeout} = require('@cucumber/cucumber');
 
@@ -37,7 +37,7 @@ process.on('rejectionHandled', () => true);
  * @returns {promise}
  * @memberOf module:world
  */
-const buildDriver = () => {
+const buildDriver = async () => {
 
     /**
      * Setup default browser capabilities.
@@ -106,9 +106,9 @@ const buildDriver = () => {
 
     /** Either use the grid or run locally. */
     if (config.grid.useGrid === true) {
-        return new webdriver.Builder().withCapabilities(capabilities).usingServer(config.grid.gridUrl + '/wd/hub').build();
+        return await new webdriver.Builder().withCapabilities(capabilities).usingServer(config.grid.gridUrl + '/wd/hub').build();
     } else {
-        return new webdriver.Builder().withCapabilities(capabilities).build();
+        return await new webdriver.Builder().withCapabilities(capabilities).build();
     }
 };
 
@@ -128,7 +128,7 @@ function CustomWorld({attach, parameters}) {
     this.attach = attach;
     this.config = config;
     this.driver = buildDriver();
-    this.driver.setFileDetector(new remoteWebDriver.FileDetector());
+    // this.driver.setFileDetector(new remoteWebDriver.FileDetector());
     this.app = config.test.application;
     this.environment = config.test.environment;
     //Load Environment Data

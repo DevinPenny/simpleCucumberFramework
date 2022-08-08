@@ -6,7 +6,8 @@
   "config": {
     "test": {
       "application": "reference",
-      "environment": "qa"
+      "environment": "qa",
+      "retry": 0
     },
     "grid": {
       "useGrid": false,
@@ -19,17 +20,17 @@
     },
     "reporter": {
       "launchReport": true,
-      "reportType": "multi",
+      "reportType": "single",
       "takeScreenShot": true
     },
     "testRail": {
-      "testRailUrL": "https://finxera.testrail.io/",
+      "testRailUrL": "test rail url goes here",
       "testRailProjectName": "Test Project",
       "updateTestRail": false,
       "closeRun": false
     },
     "jira": {
-      "jiraUrL": "https://jira.finxera.com/",
+      "jiraUrL": "jira url goes here",
       "jiraProject": "project",
       "updateJira": false
     }
@@ -37,7 +38,6 @@
   "scripts": {
     "lint": "eslint --ext=.js . || true",
     "jsdoc": "jsdoc . -c jsdoc-config.js",
-    "test": "./node_modules/@cucumber/cucumber/bin/cucumber-js --require ./features/enabled/",
     "gridUp": "docker-compose -H tcp://10.248.153.240:2376 --tls -f ./config/selenium-grid.yaml up -d --scale chrome=74 --scale firefox=1",
     "gridDown": "docker-compose -H tcp://10.248.153.240:2376 --tls -f ./config/selenium-grid.yaml down"
   },
@@ -68,6 +68,7 @@
     "geckodriver": "latest",
     "jira-client": "^8.0.0",
     "jsdoc": "^3.6.3",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.20",
     "moment": "^2.24.0",
     "multiple-cucumber-html-reporter": "^1.19.0",

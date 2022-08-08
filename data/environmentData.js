@@ -4,7 +4,6 @@
  * @memberOf module:environmentData
  */
 const users = {
-    //default is for the admin page
     user1: {
         id: 'user1',
         pass: 'ABCD1234',
@@ -16,7 +15,6 @@ const users = {
             prod: 'PROD_KEY_GOES_HERE',
         },
     },
-    //aman is for the subscriber page
     user2: {
         id: 'user2',
         pass: 'ABCD1234',

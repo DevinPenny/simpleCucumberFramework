@@ -1,7 +1,6 @@
 const driver = require('selenium-webdriver');
 const {By} = driver;
 const get = require('lodash/get');
-//We pass driver to the framework base page to avoid any NPM dependency issues: https://github.com/seleniumhq/selenium/issues/5560
 const Page = require('../../pages/baseObjects');
 
 /**

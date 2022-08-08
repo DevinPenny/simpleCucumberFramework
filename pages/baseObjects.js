@@ -209,8 +209,6 @@ module.exports = function (WebDriver) {
         const elementText = await element.getText();
 
         await expect(elementText).to.equal(text, message);
-        //TODO: fix unhandled promise rejections
-        // await elementText.should.eventually.become(text, message);
     }
 
     /**
@@ -290,7 +288,6 @@ module.exports = function (WebDriver) {
      */
     async function navigateToPage(world, url, title = '', wait = 1, ignoreUrl = false) {
         await world.driver.get(url);
-        // TODO: implement a framework step, as well as a configuration means to control window size as needed
         await world.driver.manage().window().maximize();
         //Give the browser a few seconds to open and load the page.
         await world.driver.sleep(1000 * wait);
@@ -390,8 +387,6 @@ module.exports = function (WebDriver) {
         if (error.name === 'SkippedError') {
             world.attach(error.message);
             return Promise.resolve('skipped');
-            // return 'skipped';
-
         }
         return Promise.reject(error);
     }
@@ -585,7 +580,7 @@ module.exports = function (WebDriver) {
         for (let i = 0; i < 7; i++) {
             string += characters.charAt(Math.floor(Math.random() * characters.length));
         }
-        return `qa+auto${string}@${domain}`;
+        return `qaTest${string}@${domain}`;
     }
 
     /**

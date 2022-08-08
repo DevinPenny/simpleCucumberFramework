@@ -14,12 +14,10 @@ const config = require('../package.json').config;
  * @param {string} keyName - The name of the data value to retrieve.
  * @return {string|object} The data being requested.
  */
-
-//TODO: use a data manager that provides the remotePathRoot from the reference project
-// const getDataValues = (fileName, keyName) => {
-//     const data = require(`${config.remotePathRoot}/data/${fileName}`);
-//     return get(data, keyName);
-// };
+const getDataValues = (fileName, keyName) => {
+    const data = require(`${config.remotePathRoot}/data/${fileName}`);
+    return get(data, keyName);
+};
 
 /**
  * Wait for a specified number of seconds to delay testing
@@ -48,8 +46,7 @@ const jwtDecode = async (token) => {
  * @param {string} user - The name of a user to provide for creating an authenticated header when needed.
  * @return {object} An axios instance to be used for mocha tests.
  */
-//TODO: this will have to be reworked with the framework configured as an NPM package
-const createSession = async (world, user) => { //renameLater
+const createSession = async (world, user) => {
 
     //Get environment config options dictated from node. If debugging, you must set the package.json config parameters to the appropriate values
     //This is because running from webstorm does not create a node instance and so process is undefined.

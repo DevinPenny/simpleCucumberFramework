@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-/* eslint-disable no-console */
 const nodePackage = require('./package.json');
 const config = nodePackage.config;
 const {execSync} = require('child_process');
@@ -8,7 +6,6 @@ const working = path.dirname(process.argv[1]);
 const fs = require('fs');
 const {get} = require('lodash');
 const decodeToken = require('jwt-decode');
-
 const timestamp = require('moment')().format('MM-DD-HHmm');
 const {each} = require('lodash');
 

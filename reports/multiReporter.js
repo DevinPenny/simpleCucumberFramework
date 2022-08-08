@@ -1,6 +1,6 @@
 const report = require('multiple-cucumber-html-reporter');
 //TODO: pass driver to this funciton so we can get browser information in this report. (version, etc)
-//TODO: Implement a means to provide failing step details into this report as a column in the custom data object
+//TODO: Implement a means to provide failing step details into this report as a column in the data object
 async function reporter(config, timestamp, working) {
     try {
 
