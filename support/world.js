@@ -17,7 +17,7 @@ const buildDriver = () => {
      * @property {boolean} capabilities.takeScreenshot=true - Whether the browser should allow screenshots to be taken.
      * @memberOf module:world
      */
-    let capabilities = {
+    let basicCapabilities = {
         browserName: config.browser.browserName,
         acceptSslCerts: true,
         cleanSession: true,
@@ -25,12 +25,62 @@ const buildDriver = () => {
         takesScreenshot: true,
     };
 
+
+    const parallelTestBaseCapability = {
+        "buildName": "BStack Build Number 1",
+        "local": "false",
+        "seleniumVersion": "4.0.0",
+        "userName": process.env["BROWSERSTACK_USERNAME"] || "devinpenny_o8VUT5",
+        "accessKey": process.env["BROWSERSTACK_ACCESS_KEY"] || "mUmAUpMqdxLwa2YYATj5"
+    };
+
+    let browserStackCapabilities = [
+        {
+            'bstack:options': {
+                "os": "OS X",
+                "osVersion": "Sierra",
+                "sessionName": "Parallel test 1",
+                ...parallelTestBaseCapability
+            },
+            "browserName": "Chrome",
+            "browserVersion": "latest",
+        },
+        {
+            'bstack:options': {
+                "os": "OS X",
+                "osVersion": "Sierra",
+                "sessionName": "Parallel test 2",
+                ...parallelTestBaseCapability
+            },
+            "browserName": "Safari",
+            "browserVersion": "latest",
+        },
+        {
+            'bstack:options': {
+                "os": "windows",
+                "osVersion": "11",
+                "sessionName": "Parallel test 3",
+                ...parallelTestBaseCapability
+            },
+            "browserName": "Chrome",
+            "browserVersion": "latest",
+        },
+    ];
+
     /** Either use the grid or run locally. */
-    if (config.grid.useGrid === true) {
-        return new webdriver.Builder().withCapabilities(capabilities).usingServer(config.grid.gridUrl).build();
+    if (config.grid.useGrid === true){
+        switch(config.grid.gridType.toLowerCase()) {
+            case 'browserstack':
+                return new webdriver.Builder().withCapabilities(browserStackCapabilities).usingServer(config.grid.browserStackGrid).build();
+            case 'homegrid':
+                return new webdriver.Builder().withCapabilities(basicCapabilities).usingServer(config.grid.homeGrid).build();
+            default:
+                return new webdriver.Builder().withCapabilities(basicCapabilities).build();
+        }
     } else {
-        return new webdriver.Builder().withCapabilities(capabilities).build();
+        return new webdriver.Builder().withCapabilities(basicCapabilities).build();
     }
+
 };
 
 

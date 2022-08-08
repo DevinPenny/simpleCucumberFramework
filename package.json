@@ -11,7 +11,9 @@
     },
     "grid": {
       "useGrid": false,
-      "gridUrl": "some-url",
+      "gridType": "home",
+      "homeGrid": "https://some-url.com/wd/hub",
+      "browserStackGrid": "https://hub.browserstack.com/wd/hub",
       "parallel": "5"
     },
     "browser": {
