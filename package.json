@@ -7,7 +7,8 @@
     "test": {
       "application": "reference",
       "environment": "qa",
-      "retry": 0
+      "retry": 0,
+      "preAuth": false
     },
     "grid": {
       "useGrid": false,

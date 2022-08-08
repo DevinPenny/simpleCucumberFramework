@@ -223,18 +223,18 @@ async function startCucumber() {
     }
 
 
-    /**get user tokens to share with all browsers. */
-    //TODO: only use this if we need to create auth tokens before we run tests
-    // try {
-    //     console.info('\n\tGenerating auth tokens for users...');
-    //     await authUsers(config.test.environment);
-    //     console.info('\tAll tokens ready');
-    //
-    // } catch (e) {
-    //     console.log(e);
-    //     process.exit(1);
-    // }
+    /**get user tokens to share with all browsers before test execution. */
+    if (config.test.preAuth) {
+        try {
+            console.info('\n\tGenerating auth tokens for users...');
+            await authUsers(config.test.environment);
+            console.info('\tAll tokens ready');
 
+        } catch (e) {
+            console.log(e);
+            process.exit(1);
+        }
+    }
 
     /**if we are integrating with TestRail, then get the project ID and add it to the world object*/
     if (config.testRail.updateTestRail) {
