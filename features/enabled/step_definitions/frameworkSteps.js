@@ -1,6 +1,6 @@
 const cucumber = require('@cucumber/cucumber');
 const {Given, When, Then} = cucumber;
-const Page = require('../../../pages/baseObjects');
+const Page = require('../../../pages/uiBaseObjects');
 
 
 Given('I wait {string} seconds', {timeout: 60 * 1000}, function (seconds) {

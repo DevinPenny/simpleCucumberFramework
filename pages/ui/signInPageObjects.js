@@ -1,7 +1,7 @@
 const driver = require('selenium-webdriver');
 const {By} = driver;
 const get = require('lodash/get');
-const Page = require('../../pages/baseObjects');
+const Page = require('../../pages/uiBaseObjects');
 
 /**
  * The purpose of element map, is to give easy names to identify elements. This map has to
@@ -56,13 +56,13 @@ module.exports = {
     },
 
     /**
-     * Uses the [navigateToPage]{@link module:baseObjects.navigateToPage} method to load the login page, then authenticates using the API and sets a `user` cookie with the generated token.  Finally, refresh the page so the authentication cookie is read, and the app finally loads the default user page.
+     * Uses the [navigateToPage]{@link module:uiBaseObjects.navigateToPage} method to load the login page, then authenticates using the API and sets a `user` cookie with the generated token.  Finally, refresh the page so the authentication cookie is read, and the app finally loads the default user page.
      *
      * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
      * @param {string} account - The account being used for the test.
      * @param {string} title - The HTML page title expected.
      * @param {boolean} ignoreUrl - set to true if you want to skip the url check.
-     * @return {Promise} The result of the [navigateToPage]{@link module:baseObjects.navigateToPage} method.
+     * @return {Promise} The result of the [navigateToPage]{@link module:uiBaseObjects.navigateToPage} method.
      */
     async authenticateWithToken(world, account, title, ignoreUrl = false) {
         await Page.navigateToPage(world, get(world.envData, 'domain', '') + '/login', title, 1, ignoreUrl);

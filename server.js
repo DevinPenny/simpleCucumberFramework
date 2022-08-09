@@ -286,7 +286,7 @@ async function reportCucumber() {
                     /**execute the single report command */
                     const command = `${working}/reports/reporter ` +
                         `--timestamp ${timestamp} ` +
-                        `--config '${JSON.stringify(config)}'`  //<-- pass the config object to report.js
+                        `--config '${JSON.stringify(config)}'`; //<-- pass the config object to report.js
 
                     execSync(command, {stdio: 'inherit'});
 
@@ -308,7 +308,7 @@ async function getTestRailData() {
 
     const testRailSupport = require('testrail-api');
 
-    console.info(`\tConnecting to Test Rail for project data.`)
+    console.info(`\tConnecting to Test Rail for project data.`);
 
     /** Get test rail project information and determine the project id */
     const project = await testRailSupport.getProjects(config);
