@@ -267,7 +267,7 @@ async function startCucumber() {
     }
 
     executeReport = true;
-    console.info(`\ndone`)
+    console.info(`\ndone`);
     process.exit(process.exitCode);
 }
 

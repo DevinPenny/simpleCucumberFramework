@@ -7,7 +7,6 @@ const {v4: uuid} = require('uuid');
 const {until, promise, Key, By} = require('selenium-webdriver');
 
 
-
 /**
  * Wait for an element to be displayed on the page.
  *
@@ -27,12 +26,12 @@ async function waitToBeVisible(world, locator, message = '', visibleWait = 25000
 
         const condition = await until.elementIsVisible(element);
         await world.driver.wait(condition, visibleWait);
+
         return await element;
 
     } catch (e) {
         throw new Error(message !== '' ? `${message}\n error:${e}` : e);
     }
-
 }
 
 /**
@@ -47,6 +46,7 @@ async function waitToBeVisible(world, locator, message = '', visibleWait = 25000
 async function waitToBeLocated(world, locator, message = '', locateWait = 25000) {
     try {
         await world.driver.wait(until.elementLocated(locator), locateWait);
+
         return await world.driver.findElement(locator);
 
     } catch (e) {
@@ -123,10 +123,11 @@ async function getText(world, locator) {
  * @param {boolean} [ignore=false] - Set this parameter to true if the field should not be cleared (date fields) or the value is reformatted after entry. Example: Phone number 1112223333 becomes (111) 222-3333
  * @param {string} message - the error message to provide in the test report if there is an error.
  * @param {boolean} [visibleWait=true] - set to false in order to wait to be located instead of visible.
- * @return {Promise} [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the text in the input field is what we expected.
+ * @return {void}
  */
 async function enterText(world, locator, text, ignore = false, message = '', visibleWait = true) {
     const input = (visibleWait) ? await waitToBeVisible(world, locator, message) : await waitToBeLocated(world, locator, message);
+
     if (!ignore) {
         await clearField(world, locator);
     }
@@ -138,6 +139,7 @@ async function enterText(world, locator, text, ignore = false, message = '', vis
 
     if (!ignore) {
         const foundText = await getElementAttribute(world, locator, 'value');
+
         if (foundText !== text) {
             throw new Error(`The value ${text} was not entered in the field ${locator}`);
         }
@@ -152,9 +154,11 @@ async function enterText(world, locator, text, ignore = false, message = '', vis
  * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function clearField(world, locator) {
+    //TODO: this should attempt to verify that the field is clear with getText AND or getAttribute.
     const field = await waitToBeVisible(world, locator, `Could not locate the input field: ${locator}`);
     await field.clear();
     field.getAttribute('value').should.become('', `Could not clear the input field: ${locator}`);
+
     return field;
 }
 
@@ -186,8 +190,6 @@ async function clearWithBackSpace(world, locator) {
     } else {
         return element;
     }
-
-
 }
 
 /**
@@ -228,8 +230,9 @@ async function expectTextContains(world, locator, text, message = '') {
  * @param {string} label - The element text to match.
  * @param {Boolean} ignoredCase - whether to ignore the list item case
  * @param {Boolean} exactMatch - Changes the function to find an element containing the text
- * @return {element} Either the array of [Selenium WebElement(s)]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that match the element or the [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the array has more than zero elements.
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
+// TODO: write in async
 async function pickOne(world, locator, label, ignoredCase = true, exactMatch = true) {
     const resolvedList = await promise.filter(
         world.driver.findElements(locator),
@@ -262,7 +265,7 @@ async function pickOne(world, locator, label, ignoredCase = true, exactMatch = t
  * Switch to the next opened browser tab
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
- * @return {Promise} - Promise resolution that the tab has switched to the subsequent tab of the browser.
+ * @return {void}
  */
 async function switchToNextTab(world) {
     const handles = await world.driver.getAllWindowHandles();
@@ -284,11 +287,14 @@ async function switchToNextTab(world) {
 async function navigateToPage(world, url, title = '', wait = 1, ignoreUrl = false) {
     await world.driver.manage().window().maximize();
     await world.driver.get(url);
+
     //Give the browser a few seconds to open and load the page.
     await world.driver.sleep(1000 * wait);
+
     if (!ignoreUrl) {
         await world.driver.getCurrentUrl().should.become(url, `The url ${url} could not be reached`);
     }
+
     await waitSeconds(world, wait);
 }
 
@@ -296,7 +302,7 @@ async function navigateToPage(world, url, title = '', wait = 1, ignoreUrl = fals
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {number} seconds - the amount of time to wait after refreshing the page.
- * @return {void} - Lets you know when the refresh is complete
+ * @return {void}
  */
 async function refreshPage(world, seconds = 7) {
     await world.driver.navigate().refresh();
@@ -321,7 +327,7 @@ async function verifyPageUrl(world, url) {
  * @param {method} locator - The {@link WebDriver} method that identifies the input box to enter text into.
  * @param {boolean} [visibleWait=false] - A [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that should be visible before clicking the `locator` item.
  * @param {string} [message=''] - The custom error message, meant to indicate the true nature of the error as opposed to a missing element.
- * @return {Promise} [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the text in the input field is what we expected.
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function clickElement(world, locator, visibleWait = false, message = '') {
     //either wait for an element to be located, or wait for it to be visible.
@@ -332,7 +338,9 @@ async function clickElement(world, locator, visibleWait = false, message = '') {
     } catch (error) {
         throw new Error(`Could not click on the element '${locator} \n ${error}'`);
     }
+
     await waitSeconds(world, .5);
+
     return element;
 }
 
@@ -349,6 +357,7 @@ async function clickElement(world, locator, visibleWait = false, message = '') {
  */
 async function clickListItem(world, locator, label, message = '', ignoredCase = true, exactMatch = false) {
     await waitToBeLocated(world, locator, message);
+
     const picked = await pickOne(world, locator, label, ignoredCase, exactMatch);
 
     try {
@@ -356,7 +365,9 @@ async function clickListItem(world, locator, label, message = '', ignoredCase = 
     } catch (e) {
         throw new Error(`Could not click on an element with text: ${label} \n ${e}`);
     }
+
     await waitSeconds(world, .5);
+
     return picked;
 }
 
@@ -381,8 +392,10 @@ async function resolveStep(world, result) {
 async function rejectStep(world, error) {
     if (error.name === 'SkippedError') {
         world.attach(error.message);
+
         return Promise.resolve('skipped');
     }
+
     return Promise.reject(error);
 }
 
@@ -421,10 +434,11 @@ async function getPageUrl(world) {
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {string} fileName - The core portion of the filename used to retrieve the data.
  * @param {string} keyName - The name of the data value to retrieve.
- * @return {string|string[]} The data being requested.
+ * @return {string|string[]|object} The data being requested.
  */
 async function getDataValues(world, fileName, keyName) {
     const data = require(`${process.cwd()}/data/${fileName.replace(/\s/g, '')}Data`)(world);
+
     return await get(data, keyName, '');
 }
 
@@ -437,6 +451,7 @@ async function getDataValues(world, fileName, keyName) {
  */
 async function getElementCount(world, locator) {
     let elements = await world.driver.findElements(locator);
+
     return elements.length;
 }
 
@@ -447,7 +462,7 @@ async function getElementCount(world, locator) {
  * @param {!(By|Function)} locator - element locators
  * @param {String} value - value of the element that want to find the index of
  * @param {boolean} exactMatch - set to false if the text match uses contains instead of exactly equals
- * @return {Promise} the positional index of the located element using the matching element text.
+ * @return {number} the positional index of the located element using the matching element text.
  */
 async function getElementIndex(world, locator, value, exactMatch = true) {
     const texts = await getTexts(world, locator);
@@ -460,11 +475,15 @@ async function getElementIndex(world, locator, value, exactMatch = true) {
         if (texts.indexOf(value) === -1) {
             throw new Error(`Elements found by locator does not contain the value: ${value}`);
         }
+
         return texts.indexOf(value) + 1;
+
     } else {
         for (let i = 0; i < texts.length; i++) {
             if (texts[i].includes(value)) {
+
                 return i + 1;
+
             } else {
                 throw new Error(`Elements found by locator does not contain the value: ${value}`);
             }
@@ -478,7 +497,7 @@ async function getElementIndex(world, locator, value, exactMatch = true) {
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {String} text - given text to assert
  * @param {number} timeout - timeout
- * @return {Promise} The title of the page
+ * @return {string} The title of the page
  */
 async function waitUntilTitleContains(world, text, timeout = 15000) {
     const title = await world.driver.wait(until.titleContains(text), timeout);
@@ -486,6 +505,7 @@ async function waitUntilTitleContains(world, text, timeout = 15000) {
     if (title !== text) {
         throw new Error(`Timeout: The title does not contain ${text} after ` + timeout / 1000 + ' seconds');
     }
+
     return title;
 }
 
@@ -495,7 +515,7 @@ async function waitUntilTitleContains(world, text, timeout = 15000) {
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {number} index - tab index
- * @return {Promise} - Promise resolution that the browser tab has been changed to the indexed tab.
+ * @return {void} - Promise resolution that the browser tab has been changed to the indexed tab.
  */
 async function switchToTab(world, index) {
     const handles = await world.driver.getAllWindowHandles();
@@ -508,7 +528,7 @@ async function switchToTab(world, index) {
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {string} url - The specified URl to visit. Note that this must be formatted properly with https and www in the string.
- * @return {Promise} - Promise resolution that a new tab has been opened to the specified URL.
+ * @return {void} - Promise resolution that a new tab has been opened to the specified URL.
  */
 async function openInNewTab(world, url) {
     await world.driver.executeScript('window.open()');
@@ -544,11 +564,12 @@ async function verifyElements(world, elements, visible = true, waitTime = 1000) 
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {method} locator - The {@link WebDriver} method that locates the elements whose texts are being checked.
- * @return {Promise} - Promise resolution that the browser javascript executor has changed the scroll position of the page.
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function scrollIntoView(world, locator) {
     const element = await waitToBeLocated(world, locator);
     await world.driver.executeScript('arguments[0].scrollIntoView(true);', element);
+
     return element;
 }
 
@@ -575,6 +596,7 @@ async function randomEmail(domain = 'email.com') {
     for (let i = 0; i < 7; i++) {
         string += characters.charAt(Math.floor(Math.random() * characters.length));
     }
+
     return `qaTest${string}@${domain}`;
 }
 
@@ -591,6 +613,7 @@ async function randomNumber(size) {
     for (let i = 0; i < size; i++) {
         random += characters.charAt(Math.floor(Math.random() * characters.length));
     }
+
     return random;
 }
 
@@ -603,6 +626,7 @@ async function randomNumber(size) {
 async function currentDateTime(separator = false) {
     if (separator) {
         return require('moment')().format('YYYY-MM-DD-HH-mm');
+
     } else {
         return require('moment')().format('YYYYMMDDHHmm');
     }
@@ -611,7 +635,7 @@ async function currentDateTime(separator = false) {
 /**
  * Get a random String
  * @param {number} size - length of the string
- * @return {String} a string
+ * @return {String} a random string of the provided size
  */
 async function randString(size) {
     let random = '';
@@ -620,12 +644,14 @@ async function randString(size) {
     for (let i = 0; i < size; i++) {
         random += await characters.charAt(Math.floor(Math.random() * characters.length));
     }
+
     return random;
 }
 
 /**
- * Generate a unique Id
- * @return {String}
+ * Generate a unique UUID
+ *
+ * @return {String} a unique UUID
  */
 async function generateId() {
     return uuid();
@@ -636,10 +662,11 @@ async function generateId() {
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {method} locator - element locator
  * @param {String} attribute - element attribute
- * @return {Promise} - The attribute of the element
+ * @return {string} - The attribute of the element
  */
 async function getElementAttribute(world, locator, attribute) {
     const element = await world.driver.findElement(locator);
+
     return element.getAttribute(attribute);
 }
 
@@ -651,8 +678,7 @@ async function getElementAttribute(world, locator, attribute) {
  * @return {boolean} - true or false if the attribute is present.
  */
 async function verifyAttributePresence(world, locator, attribute) {
-    const result = await world.driver.findElement(locator).getAttribute(attribute);
-    return result !== null;
+    return await world.driver.findElement(locator).getAttribute(attribute);
 }
 
 /**
@@ -664,6 +690,7 @@ async function verifyAttributePresence(world, locator, attribute) {
  */
 async function getElementCssValue(world, locator, prop) {
     const element = await waitToBeVisible(world, locator);
+
     return await element.getCssValue(prop);
 }
 
@@ -671,11 +698,13 @@ async function getElementCssValue(world, locator, prop) {
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {method} locator - element in focus. The same one you typed into with enterText
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function pressReturn(world, locator) {
     const element = await waitToBeLocated(world, locator);
     await element.sendKeys(Key.RETURN);
     await waitSeconds(world, .5);
+
     return element;
 }
 
@@ -683,10 +712,12 @@ async function pressReturn(world, locator) {
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {method} locator - element in focus. The same one you¬ typed into with enterText
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function pressTab(world, locator) {
     const element = await waitToBeLocated(world, locator);
     await element.sendKeys(Key.TAB);
+
     return element;
 }
 
@@ -718,6 +749,7 @@ async function rgbaToHex(value) {
         else if (index === 4)
             result += Math.round(parseInt(val) * 255).toString(16).padStart(2, '0');
     });
+
     return result;
 }
 
@@ -727,6 +759,7 @@ async function rgbaToHex(value) {
  * @param {string} str - The string to be converted to camelCase.
  * @return {string} The string converted to camelCase.
  */
+// TODO: try lodash camelcase instead
 async function toCamelCase(str) {
     return str.toLowerCase()
         .replace('+', 'Plus')
@@ -744,33 +777,39 @@ async function toCamelCase(str) {
  * @param {method} timeFrameInput - The {@link WebDriver} method that identifies the input box for the relative time amount.
  * @param {method} timeFrameSelect - The {@link WebDriver} method that identifies the `<select />` dropdown representing the relative time frame.
  * @param {method} timeFrameLabel - The {@link WebDriver} method that identifies the element containing the calculated relative date and time.
- * @return {Promise} [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the relative date has been set.
+ * @return {boolean} returns true if the date range check passes.
  */
 async function checkDateRange(world, timeFrameInput, timeFrameSelect, timeFrameLabel) {
-    let units = {}, timeFrom = '';
     const start = moment();
-    // const timeFrameInput = await waitToBeLocated(world, locator);
-    world.driver.findElement(timeFrameInput).getAttribute('value').then((timeFrameValue) => {
-        timeFrameValue = parseInt(timeFrameValue);
-        units = {
-            's': {text: 'Seconds ago', range: {seconds: timeFrameValue}},
-            'm': {text: 'Minutes ago', range: {minutes: timeFrameValue}},
-            'h': {text: 'Hours ago', range: {hours: timeFrameValue}},
-            'd': {text: 'Days ago', range: {days: timeFrameValue}},
-            'w': {text: 'Weeks ago', range: {weeks: timeFrameValue}},
-            'M': {text: 'Months ago', range: {months: timeFrameValue}},
-            'y': {text: 'Years ago', range: {years: timeFrameValue}},
-        };
-        world.driver.findElement(timeFrameSelect).getAttribute('value').then((timeFrameRange) => {
-            timeFrom = 'From: ' + start.subtract(units[timeFrameRange].range).format('YYYY-MM-DD');
-            expectTextContains(world, timeFrameLabel, timeFrom).then(() => {
-            }, (error) => {
-                return Promise.reject(`When adjusting the time range, the new value '${timeFrom}' ` +
-                    `does not match the expected value '${error.actual.slice(0, 16)}'`);
-            });
-        });
-    });
+
+    const timeFrameValue = await world.driver.findElement(timeFrameInput).getAttribute('value');
+
+    const timeFrameParsed = await parseInt(timeFrameValue);
+
+    const units = {
+        's': {text: 'Seconds ago', range: {seconds: timeFrameParsed}},
+        'm': {text: 'Minutes ago', range: {minutes: timeFrameParsed}},
+        'h': {text: 'Hours ago', range: {hours: timeFrameParsed}},
+        'd': {text: 'Days ago', range: {days: timeFrameParsed}},
+        'w': {text: 'Weeks ago', range: {weeks: timeFrameParsed}},
+        'M': {text: 'Months ago', range: {months: timeFrameParsed}},
+        'y': {text: 'Years ago', range: {years: timeFrameParsed}},
+    };
+
+    const timeFrameRange = await world.driver.findElement(timeFrameSelect).getAttribute('value');
+
+
+    const timeFrom = 'From: ' + start.subtract(units[timeFrameRange].range).format('YYYY-MM-DD');
+
+    const contains = await expectTextContains(world, timeFrameLabel, timeFrom);
+
+    if (!contains) {
+        throw new Error(`When adjusting the time range, the new value '${timeFrom}' does not match the expected value '${error.actual.slice(0, 16)}'`);
+    }
+
+    return contains;
 }
+
 
 /**
  * Find all of the elements matching a locator, then compare the text of each element to a table list provided by a feature file.
@@ -781,6 +820,7 @@ async function checkDateRange(world, timeFrameInput, timeFrameSelect, timeFrameL
  * @return {Promise} [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the page being visited has the expected title.
  */
 async function verifyFeatureTableContents(world, locator, table) {
+
     await waitToBeVisible(world, locator);
     let providedList = [];
     const foundList = await getTexts(world, locator);
@@ -802,7 +842,6 @@ async function verifyFeatureTableContents(world, locator, table) {
  * @param {String} error - error message when fails
  * @return {Promise} - resolution of waitToBeHidden
  */
-
 async function waitToBeHidden(world, target, timeout = 25000, error = null) {
     const elements = await getElementCount(world, target);
 
@@ -817,7 +856,6 @@ async function waitToBeHidden(world, target, timeout = 25000, error = null) {
     } catch (e){
         throw new Error(`Error waiting to be hidden: ${e}`);
     }
-
 }
 
 /**
@@ -827,6 +865,7 @@ async function waitToBeHidden(world, target, timeout = 25000, error = null) {
  * @param {String} text - assertion text
  * @param {number} timeout - timeout milliseconds
  * @param {String} error - custom error
+ * @return {void}
  */
 async function waitUntilTextContains(world, locator, text, timeout = 30000, error = null) {
     const element = await world.driver.findElement(locator);
@@ -841,7 +880,7 @@ async function waitUntilTextContains(world, locator, text, timeout = 30000, erro
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {!(By|Function)} hover - element locator that will be hovered on
  * @param {!(By|Function)} elementClick - expected element that will be visible after hovering
- * @return {Promise} Assert that the expected element is visible when hover the mouse over the element
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function hoverOverElementAndClick(world, hover, elementClick) {
     const element = await world.driver.findElement(hover);
@@ -852,6 +891,8 @@ async function hoverOverElementAndClick(world, hover, elementClick) {
     await waitSeconds(world, 1);
     await element.click();
     await waitSeconds(world, 2);
+
+    return element;
 }
 
 
@@ -860,7 +901,7 @@ async function hoverOverElementAndClick(world, hover, elementClick) {
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
  * @param {!(By|Function)} hover - element locator that will be hovered on
- * @return {Promise} Assert that the expected element is visible when hover the mouse over the element
+ * @return {Element} The [Selenium WebElement]{@link http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebElement.html} that was cleared.
  */
 async function hoverOverElement(world, hover) {
     const element = waitToBeLocated(world, hover);
@@ -868,6 +909,7 @@ async function hoverOverElement(world, hover) {
     await actions.move({origin: element}).perform();
     await waitSeconds(world, 1);
 
+    return element;
 }
 
 module.exports = {
@@ -920,6 +962,4 @@ module.exports = {
     verifyFeatureTableContents,
     hoverOverElementAndClick,
     hoverOverElement,
-
 };
-

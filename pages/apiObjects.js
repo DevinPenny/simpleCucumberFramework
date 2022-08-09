@@ -221,6 +221,7 @@ const apiWaiting = async (session, searchAPI, data = {}, keyReturned = 'data.id'
  * @module integrationUtils
  */
 module.exports = {
+    getDataValues,
     waitSeconds,
     createSession,
     jwtDecode,
