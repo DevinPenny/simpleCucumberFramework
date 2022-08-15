@@ -28,43 +28,43 @@ const buildDriver = () => {
 
 
     const parallelTestBaseCapability = {
-        "buildName": "BStack Build Number 1",
-        "local": "false",
-        "seleniumVersion": "4.0.0",
-        "userName": process.env["BROWSERSTACK_USERNAME"] || "devinpenny_o8VUT5",
-        "accessKey": process.env["BROWSERSTACK_ACCESS_KEY"] || "mUmAUpMqdxLwa2YYATj5"
+        buildName: "BStack Build Number 1",
+        local: false,
+        seleniumVersion: "4.0.0",
+        userName: process.env["BROWSERSTACK_USERNAME"] || "devinpenny_o8VUT5",
+        accessKey: process.env["BROWSERSTACK_ACCESS_KEY"] || "mUmAUpMqdxLwa2YYATj5"
     };
 
     let browserStackCapabilities = [
         {
             'bstack:options': {
-                "os": "OS X",
-                "osVersion": "Sierra",
-                "sessionName": "Parallel test 1",
+                os: "OS X",
+                osVersion: "Sierra",
+                sessionName: "Parallel test 1",
                 ...parallelTestBaseCapability
             },
-            "browserName": "Chrome",
-            "browserVersion": "latest",
+            browserName: "Chrome",
+            browserVersion: "latest",
         },
         {
             'bstack:options': {
-                "os": "OS X",
-                "osVersion": "Sierra",
-                "sessionName": "Parallel test 2",
+                os: "OS X",
+                osVersion: "Sierra",
+                sessionName: "Parallel test 2",
                 ...parallelTestBaseCapability
             },
-            "browserName": "Safari",
-            "browserVersion": "latest",
+            browserName: "Safari",
+            browserVersion: "latest",
         },
         {
             'bstack:options': {
-                "os": "windows",
-                "osVersion": "11",
-                "sessionName": "Parallel test 3",
+                os: "windows",
+                osVersion: "11",
+                sessionName: "Parallel test 3",
                 ...parallelTestBaseCapability
             },
-            "browserName": "Chrome",
-            "browserVersion": "latest",
+            browserName: "Chrome",
+            browserVersion: "latest",
         },
     ];
 

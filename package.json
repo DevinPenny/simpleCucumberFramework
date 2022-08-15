@@ -11,8 +11,8 @@
       "preAuth": false
     },
     "grid": {
-      "useGrid": false,
-      "gridType": "home",
+      "useGrid": true,
+      "gridType": "browserStack",
       "parallel": "5"
     },
     "browser": {
@@ -21,7 +21,7 @@
     },
     "reporter": {
       "launchReport": true,
-      "reportType": "multi",
+      "reportType": "single",
       "takeScreenShot": true
     },
     "testRail": {
