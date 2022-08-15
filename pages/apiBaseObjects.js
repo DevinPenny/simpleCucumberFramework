@@ -126,7 +126,7 @@ async function daysToDate(days) {
  * create a unix time formatted string representing the number of seconds seconds since January 1, 1970 at 00:00:00 UTC
  * @returns {Promise<number>}
  */
-async function getUnixTime(){
+async function getUnixTime() {
     return new Date().getTime() / 1000; //getTime returns the time in milliseconds, divide by 1000 to get seconds
 }
 

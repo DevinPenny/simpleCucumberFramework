@@ -47,8 +47,8 @@ After({}, async function (scenario) {
             let testTag;
 
             //get the proper test tag. It should start with @C
-            for(let i = 0; i < scenario.pickle.tags.length; i++){
-                if(scenario.pickle.tags[i].name.substring(0,2) === '@C'){
+            for (let i = 0; i < scenario.pickle.tags.length; i++) {
+                if (scenario.pickle.tags[i].name.substring(0, 2) === '@C') {
                     testTag = scenario.pickle.tags[i].name.replace('@C', '');
                     caseId = testTag.replace('@C', '');
                     break;

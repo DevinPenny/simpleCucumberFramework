@@ -34,6 +34,7 @@ async function waitToBeVisible(world, locator, message = '', visibleWait = 25000
     }
 }
 
+
 /**
  * Wait for an element to be located on the page.
  *
@@ -54,6 +55,7 @@ async function waitToBeLocated(world, locator, message = '', locateWait = 25000)
     }
 }
 
+
 /**
  * Wait for a specific number of seconds. This should not be heavily used.
  *
@@ -64,6 +66,7 @@ async function waitToBeLocated(world, locator, message = '', locateWait = 25000)
 async function waitSeconds(world, seconds) {
     await world.driver.sleep(1000 * seconds);
 }
+
 
 /**
  * Get text of a set of elements
@@ -87,6 +90,7 @@ async function getTexts(world, elements, message = '', expectingText = true) {
 
     return texts;
 }
+
 
 /**
  * Get text of an element
@@ -113,6 +117,7 @@ async function getText(world, locator) {
 
     return elementText;
 }
+
 
 /**
  * Clear an input field, then enter text into the field.
@@ -146,6 +151,7 @@ async function enterText(world, locator, text, ignore = false, message = '', vis
     }
 }
 
+
 /**
  * Clear an input field. Do not use this on date fields or anything with values that persist after clearing.
  *
@@ -161,6 +167,7 @@ async function clearField(world, locator) {
 
     return field;
 }
+
 
 /**
  * Clear an input field using the backspace character
@@ -192,6 +199,7 @@ async function clearWithBackSpace(world, locator) {
     }
 }
 
+
 /**
  * Find the text of an element and compare it to a string.
  *
@@ -208,6 +216,7 @@ async function expectText(world, locator, text, message = 'The text did not matc
     await expect(elementText).to.equal(text, message);
 }
 
+
 /**
  * Find the text of an element and verify it contains a string.
  *
@@ -221,6 +230,7 @@ async function expectTextContains(world, locator, text, message = '') {
     const element = await waitToBeVisible(world, locator);
     return element.getText().should.eventually.contains(text, (message === '') ? 'The text did not contain the phrase' : message);
 }
+
 
 /**
  * Find the element from a given list that mat87ches the text provided and return that element.
@@ -261,6 +271,7 @@ async function pickOne(world, locator, label, ignoredCase = true, exactMatch = t
     }
 }
 
+
 /**
  * Switch to the next opened browser tab
  *
@@ -273,6 +284,7 @@ async function switchToNextTab(world) {
     const index = handles.indexOf(handle);
     await world.driver.switchTo().window(handles[(index + 1) < handles.length ? index + 1 : handles.length - 1]);
 }
+
 
 /**
  * Command the browser to navigate to a specific page.
@@ -298,6 +310,7 @@ async function navigateToPage(world, url, title = '', wait = 1, ignoreUrl = fals
     await waitSeconds(world, wait);
 }
 
+
 /** Refresh the browser window.
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
@@ -309,6 +322,7 @@ async function refreshPage(world, seconds = 7) {
     await waitSeconds(world, seconds);
 }
 
+
 /**
  * Verify that a page url contains an expected string
  *
@@ -319,6 +333,7 @@ async function refreshPage(world, seconds = 7) {
 async function verifyPageUrl(world, url) {
     return world.driver.getCurrentUrl().should.eventually.contain(url, 'The page url is not correct');
 }
+
 
 /**
  * This is used for all mouse clicks.
@@ -343,6 +358,7 @@ async function clickElement(world, locator, visibleWait = false, message = '') {
 
     return element;
 }
+
 
 /**
  * Find all of the elements matching a selector, then compare the text of each element until a match is found. When a match is found, click on the element.
@@ -371,6 +387,7 @@ async function clickListItem(world, locator, label, message = '', ignoredCase = 
     return picked;
 }
 
+
 /**
  * Resolve a step after performing any necessary conditional checks.
  *
@@ -381,6 +398,7 @@ async function clickListItem(world, locator, label, message = '', ignoredCase = 
 async function resolveStep(world, result) {
     return Promise.resolve(result);
 }
+
 
 /**
  * Reject a step after performing any necessary conditional checks.
@@ -399,6 +417,7 @@ async function rejectStep(world, error) {
     return Promise.reject(error);
 }
 
+
 /**
  * verify the page title is a specific string
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
@@ -408,6 +427,7 @@ async function rejectStep(world, error) {
 async function verifyPageTitle(world, title) {
     await world.driver.getTitle().should.become(title, 'The page title is not correct:');
 }
+
 
 /**
  * Verify that the page URL contains a string, can be a substring of a larger URL as an example.
@@ -419,6 +439,7 @@ async function verifyPageUrlContains(world, url) {
     await world.driver.getCurrentUrl().should.eventually.contain(url, 'The page url is not correct');
 }
 
+
 /**
  * returns the URL of a page
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
@@ -427,6 +448,7 @@ async function verifyPageUrlContains(world, url) {
 async function getPageUrl(world) {
     return await world.driver.getCurrentUrl();
 }
+
 
 /**
  * Retrieve data from the file specified. Data files must be present in the ./data folder
@@ -442,6 +464,7 @@ async function getDataValues(world, fileName, keyName) {
     return await get(data, keyName, '');
 }
 
+
 /**
  * Helper method to find the number of elements matching a locator and return the count.
  *
@@ -454,6 +477,7 @@ async function getElementCount(world, locator) {
 
     return elements.length;
 }
+
 
 /**
  * Get the index of an element that have the text match the given table
@@ -491,6 +515,7 @@ async function getElementIndex(world, locator, value, exactMatch = true) {
     }
 }
 
+
 /**
  * Wait for the page title contains the given text
  *
@@ -508,6 +533,7 @@ async function waitUntilTitleContains(world, text, timeout = 15000) {
 
     return title;
 }
+
 
 /**
  * switch to any tab on the browser. If the index is less than 0, the first tab will be selected. If the index is greater the number of tabs, the last
@@ -553,11 +579,12 @@ async function verifyElements(world, elements, visible = true, waitTime = 1000) 
             if (visible) {
                 await waitToBeVisible(world, elements[key], `Element ${key} is not visible`, waitTime);
             } else {
-                await waitToBeLocated(world, elements[key],`Element ${key} can not be located`, waitTime);
+                await waitToBeLocated(world, elements[key], `Element ${key} can not be located`, waitTime);
             }
         }
     }
 }
+
 
 /**
  * Scroll the page so that the element is visible on the view
@@ -573,6 +600,7 @@ async function scrollIntoView(world, locator) {
     return element;
 }
 
+
 /**
  * Get the dimensions of the browser
  *
@@ -582,6 +610,7 @@ async function scrollIntoView(world, locator) {
 async function getWindowSize(world) {
     return await world.driver.manage().window().getSize();
 }
+
 
 /**
  * Creates a random @email.com email address that is intended to be unique
@@ -600,6 +629,7 @@ async function randomEmail(domain = 'email.com') {
     return `qaTest${string}@${domain}`;
 }
 
+
 /**
  * Creates a random string of numbers.
  *
@@ -617,6 +647,7 @@ async function randomNumber(size) {
     return random;
 }
 
+
 /**
  * Create a timestamp formatted as a string, optionally it can be dash separated if you pass the function true
  *
@@ -631,6 +662,7 @@ async function currentDateTime(separator = false) {
         return require('moment')().format('YYYYMMDDHHmm');
     }
 }
+
 
 /**
  * Get a random String
@@ -648,6 +680,7 @@ async function randString(size) {
     return random;
 }
 
+
 /**
  * Generate a unique UUID
  *
@@ -656,6 +689,7 @@ async function randString(size) {
 async function generateId() {
     return uuid();
 }
+
 
 /**
  * Get an attribute of an element
@@ -670,6 +704,7 @@ async function getElementAttribute(world, locator, attribute) {
     return element.getAttribute(attribute);
 }
 
+
 /** check if attribute is present for an element
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
@@ -680,6 +715,7 @@ async function getElementAttribute(world, locator, attribute) {
 async function verifyAttributePresence(world, locator, attribute) {
     return await world.driver.findElement(locator).getAttribute(attribute);
 }
+
 
 /**
  * Get a Css Value of an element
@@ -693,6 +729,7 @@ async function getElementCssValue(world, locator, prop) {
 
     return await element.getCssValue(prop);
 }
+
 
 /** Press the return button for when a field has no submit button.
  *
@@ -708,6 +745,7 @@ async function pressReturn(world, locator) {
     return element;
 }
 
+
 /** Press the return button for when a field has no submit button.
  *
  * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
@@ -720,6 +758,7 @@ async function pressTab(world, locator) {
 
     return element;
 }
+
 
 /**
  * Find all of the elements matching a locator, then compare the text of each element to a an array provided by some source.
@@ -734,6 +773,7 @@ async function compareListContents(world, locator, values, message = '') {
     const elementTexts = await getTexts(world, locator);
     expect(elementTexts, message !== '' ? message : 'Lists do not match').to.have.ordered.members(values);
 }
+
 
 /**
  * Convert a rgba value to hex value
@@ -753,6 +793,7 @@ async function rgbaToHex(value) {
     return result;
 }
 
+
 /**
  * Convert a string to camel style string
  *
@@ -769,6 +810,7 @@ async function toCamelCase(str) {
         })
         .replace(/\s/g, '');
 }
+
 
 /**
  * Retrieves the relative time frame and input value and compares the calculated date to the date reported by the UI.
@@ -845,7 +887,7 @@ async function verifyFeatureTableContents(world, locator, table) {
 async function waitToBeHidden(world, target, timeout = 25000, error = null) {
     const elements = await getElementCount(world, target);
 
-    if (elements < 0){
+    if (elements < 0) {
         throw new Error(`waitToBeHidden: Can not find any elements matching locator ${locator}`)
     }
 
@@ -853,10 +895,11 @@ async function waitToBeHidden(world, target, timeout = 25000, error = null) {
 
     try {
         await world.driver.wait(until.elementIsNotVisible(element), timeout, error ? 'Timeout: The element is still visible after ' + timeout / 1000 + ' seconds' : error);
-    } catch (e){
+    } catch (e) {
         throw new Error(`Error waiting to be hidden: ${e}`);
     }
 }
+
 
 /**
  * Wait until the element contains a specific text. Useful for element text that will change
