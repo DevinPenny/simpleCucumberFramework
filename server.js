@@ -46,6 +46,10 @@ config.grid.useGrid = argopts.grid ? argopts.grid : config.grid.useGrid;
 /** determine what environment we want to run on, qa, uat, prod */
 config.test.environment = argopts.environment ? argopts.environment : config.test.environment;
 
+//TODO: implement application flag, use it to determine optionally a sub folder within enabled.
+/** determine what environment we want to run on, qa, uat, prod */
+config.test.application = argopts.application ? argopts.application : config.test.application;
+
 /** allow the ability to override closing the browser from command line*/
 config.browser.closeOnFail = argopts.closeOnFail ? argopts.closeOnFail : config.browser.closeOnFail;
 

@@ -1,11 +1,8 @@
 const axios = require('axios');
 const {get, set} = require('lodash');
 const decodeToken = require('jwt-decode');
-const {expect} = require('chai');
 const config = require('../package.json').config;
 const Page = require('./uiBaseObjects');
-
-
 
 /**
  * Decode a JWT token and return an object of the decoded token.
@@ -134,7 +131,6 @@ async function getUnixTime(){
 }
 
 module.exports = {
-    getDataValues,
     createSession,
     jwtDecode,
     currentDateTime,

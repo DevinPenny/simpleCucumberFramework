@@ -20,3 +20,12 @@ Feature: referenceTest.feature
     Given I navigate to the page "https://www.google.com/"
     And I wait "1" seconds
     And I verify that the page title is "1Google"
+
+  @TEST3 @skip
+  Scenario: TEST3 verify cucumber and selenium can open a page and verify the page title
+
+  This test is expected to be skipped
+
+    Given I navigate to the page "https://www.google.com/"
+    And I wait "1" seconds
+    And I verify that the page title is "Google"
