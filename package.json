@@ -11,7 +11,7 @@
       "preAuth": false
     },
     "grid": {
-      "useGrid": true,
+      "useGrid": false,
       "gridType": "browserStack",
       "parallel": "5"
     },

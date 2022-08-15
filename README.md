@@ -50,26 +50,24 @@ _Please note that you need to provide an empty long argument directly after the 
  "npm start -- --target qa --environment local --grid false --application reference --tags @123"
  
  **Available command line options**
- 
- --target
 
- --environment
+ --environment {string} Specify the environment to run on. 
  
- --grid
+ --grid {boolean} set to true in order to run on a selenium grid.
  
- --retries
+ --retries {number} define the number of time you wish to retry a failed test.
  
- --parallel
+ --parallel {number} Set to define the number of parallel browsers you wish to use.
  
- --browser
+ --browser {string} either chrome or firefox
  
- --application
+ --application {string} currently not implemented.
  
- --tags
+ --tags {string} provide one, or many tags that are found on feature files. "--tags @TEST1 @TEST2"
  
- --closeOnFail
+ --closeOnFail {boolean} Set to False if you want the browser to remain open after a failure.
  
---launchReport
+--launchReport {boolean} Set to false if you do not wish to have the report automatically loaded after execution.
 
 
 **Special notes on test tags**
