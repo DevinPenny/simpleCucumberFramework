@@ -23,7 +23,7 @@
     },
     "reporter": {
       "launchReport": true,
-      "reportType": "single",
+      "reportType": "multi",
       "takeScreenShot": true
     },
     "testRail": {

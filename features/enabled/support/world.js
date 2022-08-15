@@ -1,6 +1,6 @@
 const webdriver = require('selenium-webdriver');
 const remoteWebDriver = require('selenium-webdriver/remote');
-const config = require('../package.json').config;
+const config = require('../../../package.json').config;
 const {setWorldConstructor, setDefaultTimeout} = require('@cucumber/cucumber');
 
 
