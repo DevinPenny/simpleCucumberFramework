@@ -44,15 +44,13 @@ module.exports = {
         await Page.enterText(world, Page.locators.byId(elementMap.nameField), get(world.envData, `users.${account}.id`, ''));
         await Page.enterText(world, Page.locators.byId(elementMap.passField), get(world.envData, `users.${account}.pass`, ''));
         await Page.clickElement(world, Page.locators.byId(elementMap.signInButton));
-
-        //TODO: check for error when logging in
-        // await Page.clickElement(world, Page.locators.byId(elementMap.signInButton)).then(() => {
-        //     return Page.waitToBeVisible(world, elements.loginError, '', 3000, 3000).then((saveFailed) => {
-        //         return saveFailed.getText().then((errorMessage) => {
-        //             return Promise.reject(Error(`An error occurred when attempting to log in: ${errorMessage}`));
-        //         });
-        //     });
-        // })
+        //check for an error
+        // const errors = await Page.getElementCount(world, locator);
+        //
+        // if (errors > 0) {
+        //     const errorMessage = await Page.getText(world, locator);
+        //     throw new Error(`Could not do the thing got error: ${errorMessage}`);
+        // }
     },
 
     /**

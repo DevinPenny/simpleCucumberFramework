@@ -955,6 +955,34 @@ async function hoverOverElement(world, hover) {
     return element;
 }
 
+const locators = {
+    byId: (id) => {
+        return By.id(id);
+    },
+        byIdContains: (id) => {
+        return By.css(`[id*="${id}"]`);
+    },
+        byIdEndsWith: (id) => {
+        return By.css(`[id$="${id}"]`);
+    },
+        //this locator lets a user provide the search modifier so it is a single line.
+        byIdGeneric: (id, modifier = '*') => {
+        return By.css(`[id${modifier}="${id}"]`);
+    },
+        byTitle: (title) => {
+        return By.css(`[title="${title}"]`);
+    },
+        byTitleContains: (title) => {
+        return By.css(`[title*="${title}"]`);
+    },
+        byTitleEndsWith: (title) => {
+        return By.css(`[title$="${title}"]`);
+    },
+        byElementText: (text) => {
+        return By.xpath(`//div[text()="${text}"]`);
+    }
+};
+
 module.exports = {
     waitToBeVisible,
     waitToBeLocated,
@@ -1005,4 +1033,5 @@ module.exports = {
     verifyFeatureTableContents,
     hoverOverElementAndClick,
     hoverOverElement,
+    locators
 };
