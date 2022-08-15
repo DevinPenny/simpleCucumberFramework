@@ -49,7 +49,7 @@ _Please note that you need to provide an empty long argument directly after the 
 
  "npm start -- --target qa --environment local --grid false --application reference --tags @123"
  
- Available command line options
+ **Available command line options**
  
  --target
 
@@ -78,35 +78,35 @@ _Please note that you need to provide an empty long argument directly after the 
 # Framework configuration options
 
 **test**
-- application
-- environment
-- retry
-- preAuth
+- application - Not yet implemented. This refers to the folder structure within /features/enabled and allows a user to select tests only in that folder
+- environment - Provides a means to run tests against differing URL's that are configured in /data/environmentData
+- retry - Enables tests that fail to be rerun, it is a means to reduce flaky test results
+- preAuth - When configured properly, is a means to authenticate all of the users found in environmentData, store the token, and apply it to the browser before cucumber executes.
 
 **grid params**
 
-- useGrid
-- gridType
-- parallel
+- useGrid - True or False. For running tests on a grid, or on a local machine
+- gridType - Either "homegrid" or "browserstack" used to specify what selenium grid environment you wish to use.
+- parallel - Set the number of parallel tests you wish to run.
 
 **browser params** 
 
-- closeOnFail
-- browserName
+- closeOnFail - When running tests locally, set to true and the browser will remain open after a failure. This lets testers evaluate the state of the page.
+- browserName - set to either Chrome or Firefox to run tests with specified browser.
 
 **reporter params**
 
-- launchReport
-- reportType
-- takeScreenShot
+- launchReport - True or False. Launch a report after test execution
+- reportType - Values are "single" or "multi" and enable different reports depending on the needs of the team
+- takeScreenShot - True or False. When a test fails, attach a screen shot to the report for evaluation.
 
 **testRail params**
 
-- testRailProjectName
-- updateTestRail
-- closeRun
+- testRailProjectName - Set to the name of the test rail project you want to update test results for.
+- updateTestRail - True or False. Updating test rail is based on this flag.
+- closeRun - When a test run completes and results are updated in test rail, you can opt in or out of closing the test run.
 
 **jira params**
-- jiraProject
-- updateJira
+- jiraProject - Not yet implemented. The Jira project you wish to update
+- updateJira - Not yet implemented. True or False. Update Jira with test status.
 
