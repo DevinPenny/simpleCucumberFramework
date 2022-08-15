@@ -58,7 +58,7 @@ After({}, async function (scenario) {
             // remove "@C" from the tag in the test so that we have the proper ID to update TestRail
             const testResults = scenario.result;
 
-            //TODO: Need to figure out the best means to determine if we update or create tests, for now, we just update the status.
+            //TODO: Need to implement a means to determine if we update or create tests, for now, we just update the status.
             // if (world.config.testRail.cases.some(testCase => testCase.id.toString() === scenario.pickle.tags[1].name.replace('@', ''))) {
             //for debugging
             // if (true) {

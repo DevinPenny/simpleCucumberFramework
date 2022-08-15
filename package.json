@@ -13,8 +13,6 @@
     "grid": {
       "useGrid": false,
       "gridType": "home",
-      "homeGrid": "https://some-url.com/wd/hub",
-      "browserStackGrid": "https://hub.browserstack.com/wd/hub",
       "parallel": "5"
     },
     "browser": {
@@ -27,23 +25,22 @@
       "takeScreenShot": true
     },
     "testRail": {
-      "testRailUrL": "test rail url goes here",
       "testRailProjectName": "Test Project",
       "updateTestRail": false,
       "closeRun": false
     },
     "jira": {
-      "jiraUrL": "jira url goes here",
       "jiraProject": "project",
       "updateJira": false
     }
   },
   "scripts": {
+    "test": "npm start",
     "debug": "node $NODE_DEBUG_OPTION server.js --debug --environment local",
     "lint": "eslint --ext=.js . || true",
     "jsdoc": "jsdoc . -c jsdoc-config.js",
-    "gridUp": "docker-compose -H tcp://10.248.153.240:2376 --tls -f ./config/selenium-grid.yaml up -d --scale chrome=74 --scale firefox=1",
-    "gridDown": "docker-compose -H tcp://10.248.153.240:2376 --tls -f ./config/selenium-grid.yaml down"
+    "gridUp": "docker-compose -H tcp://someIP:somePort --tls -f ./config/selenium-grid.yaml up -d --scale chrome=20 --scale firefox=20",
+    "gridDown": "docker-compose -H tcp://someIP:somePort --tls -f ./config/selenium-grid.yaml down"
   },
   "keywords": [
     "Selenium",

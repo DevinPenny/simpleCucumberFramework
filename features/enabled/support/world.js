@@ -2,6 +2,7 @@ const webdriver = require('selenium-webdriver');
 const remoteWebDriver = require('selenium-webdriver/remote');
 const config = require('../../../package.json').config;
 const {setWorldConstructor, setDefaultTimeout} = require('@cucumber/cucumber');
+const frameworkData = require('../../../config/frameworkData');
 
 
 const buildDriver = () => {
@@ -69,14 +70,11 @@ const buildDriver = () => {
 
     /** Either use the grid or run locally. */
     if (config.grid.useGrid === true){
-        switch(config.grid.gridType.toLowerCase()) {
-            case 'browserstack':
-                return new webdriver.Builder().withCapabilities(browserStackCapabilities).usingServer(config.grid.browserStackGrid).build();
-            case 'homegrid':
-                return new webdriver.Builder().withCapabilities(basicCapabilities).usingServer(config.grid.homeGrid).build();
-            default:
-                return new webdriver.Builder().withCapabilities(basicCapabilities).build();
-        }
+        return new webdriver.Builder()
+            .withCapabilities(config.grid.gridType.toLowerCase() === 'browserstack' ? browserStackCapabilities : basicCapabilities)
+            .usingServer(config.grid.gridType.toLowerCase() === 'browserstack' ? frameworkData.gridData.browserStackGrid : frameworkData.gridData.homeGrid)
+            .build();
+
     } else {
         return new webdriver.Builder().withCapabilities(basicCapabilities).build();
     }

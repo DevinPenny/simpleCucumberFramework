@@ -12,6 +12,7 @@ module.exports = {
     jiraData: {
         user: 'user',
         password: 'pass',
+        jiraUrL: "jira url goes here",
     },
     //for email
     mailData: {
@@ -25,5 +26,9 @@ module.exports = {
         subject: 'Automation test results report',
         from_mail: 'user',
         to_mail: 'pass'
+    },
+    gridData: {
+        homeGrid: "https://some-url.com/wd/hub",
+        browserStackGrid: "https://hub.browserstack.com/wd/hub",
     }
 };

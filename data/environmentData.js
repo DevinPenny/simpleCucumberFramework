@@ -45,6 +45,7 @@ module.exports = {
         admin: 'https://some-url.com',
         other: 'https://some-url.com',
         apiDomain: 'https://qa.api.url.com',
+        authUrl: '/security/authenticate',
         users: users,
     },
     uat: {
@@ -52,6 +53,7 @@ module.exports = {
         admin: 'https://some-url.com',
         other: 'https://some-url.com',
         apiDomain: 'https://qa.api.url.com',
+        authUrl: '/security/authenticate',
         users: users,
     },
     sandbox: {
@@ -59,6 +61,7 @@ module.exports = {
         admin: 'https://some-url.com',
         other: 'https://some-url.com',
         apiDomain: 'https://qa.api.url.com',
+        authUrl: '/security/authenticate',
         users: users,
     },
     prod: {
@@ -66,6 +69,7 @@ module.exports = {
         admin: 'https://some-url.com',
         other: 'https://some-url.com',
         apiDomain: 'https://qa.api.url.com',
+        authUrl: '/security/authenticate',
         users: users,
     },
 };

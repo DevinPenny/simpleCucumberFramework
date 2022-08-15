@@ -4,19 +4,15 @@ const {execSync} = require('child_process');
 const path = require('path');
 const working = path.dirname(process.argv[1]);
 const fs = require('fs');
-const {get} = require('lodash');
-const decodeToken = require('jwt-decode');
 const timestamp = require('moment')().format('MM-DD-HHmm');
 const {each} = require('lodash');
+const authUsers = require("./support/browserPreAuth");
 
 const argopts = require('yargs').option({
     'tags': {type: 'array', desc: 'Enter multiple tags to run multiple tests'},
 }).argv;
 
 const launchReport = argopts.hasOwnProperty('launchReport') ? (/true/i).test(argopts.launchReport) : undefined;
-
-const axios = require('axios');
-
 const multiReporter = require('./reports/multiReporter');
 
 /** declare the world variable which is used to share data to all parallel tests, many things are assigned to world for UI tests
@@ -103,12 +99,10 @@ each(keys, (key) => {
 
 });
 
-
 /** this is an ugly way to append the tagString into the full command run later */
 if (tagString) {
     args += tagString;
 }
-
 
 /**configure the report format as well as the path to where it is saved after cucumber finishes. */
 const reportPath = './reports';
@@ -123,92 +117,17 @@ const reportFormat = `json:${reportPath}/json/results.json`;
 /** check value for executing the report, should be false if cucumer does not execute first*/
 let executeReport;
 
-async function authUsers(environment) {
-
-    const authData = require('./data/environmentData');
-    config.users = get(authData, `${environment}.users`);
-    let authURL;
-    let creds;
-    let res;
-
-    /**create an instance of Axios called session to share with all tests.*/
-    const session = await axios.create({
-        baseURL: authData[environment].apiDomain,
-        timeout: 25000,
-        validateStatus: (status) => status >= 200,
-        headers: {'Content-Type': 'application/json'}
-    });
-
-    for (const user of Object.keys(config.users)) {
-
-        if (!config.users[user].skipEnv.includes(environment)) {
-            //If we have an api key, use it, else use UN/PW
-            if (config.users[user].apiKeys[environment] === '') {
-                authURL = '/security/v1/authenticate';
-                creds = {
-                    username: get(config.users, `${user}.id`),
-                    password: get(config.users, `${user}.pass`),
-                    application: config.application,
-                };
-            } else {
-                authURL = '/security/v1/apiKey/authenticate';
-                creds = {
-                    'value': get(config.users, `${user}.apiKeys${environment}`)
-                };
-            }
-
-            try {
-                res = await session({
-                    url: authURL,
-                    method: 'post',
-                    data: creds
-                });
-
-                // await console.log(`user: ${user}` + JSON.stringify(res.data));
-                if(res.status !== 200){
-                    console.info(`\n\tERROR: Unable to authorize user ${user}\n`);
-                    console.info('\t' + res.data.message);
-                    process.exit(1);
-                }
-
-            } catch (e) {
-                console.info(`\t${user} auth FAILED: ${e}`);
-            }
-
-            if (res.data.token === '') {
-                console.info(`\t${user} auth request failed! ${res.status}:${res.statusText}`);
-            } else {
-
-                if (res.data.resetPassword) {
-                    console.info(`\t${user} password reset required! Stopping test execution until all users have updated passwords!`);
-                    process.exit(1);
-                }
-
-                console.info(`\t${user} auth request complete`);
-                config.users[user].token = res.data.token;
-                config.users[user].domainId = decodeToken(res.data.token).domain.id;
-
-            }
-
-            config.users[user].token = res.data.token;
-            config.users[user].domainId = decodeToken(res.data.token).domain.id;
-        } else {
-            console.info(`\tSkipping auth for ${user} due to environment rules`);
-        }
-
-    }
-
-}
-
 async function startCucumber() {
 
     /** display runtime options for cucumber in terminal */
     console.info('\nExecuting cucumber tests with runtime options:\n');
 
     Object.keys(config).forEach((key) => {
-        if (typeof config[key] !== 'object') {
+        if (typeof config[key] === 'object') {
             if (config[key] !== 'server.js') {
-                console.info(`\t${key} = ${config[key]}`);
+                Object.keys(config[key]).forEach((baseValue) => {
+                    console.info(`\t${key}.${baseValue} = ${config[key][baseValue]}`);
+                })
             }
         }
         if (key === 'tags') {
@@ -222,12 +141,11 @@ async function startCucumber() {
         });
     }
 
-
     /**get user tokens to share with all browsers before test execution. */
     if (config.test.preAuth) {
         try {
             console.info('\n\tGenerating auth tokens for users...');
-            await authUsers(config.test.environment);
+            await authUsers.setUserTokens(config.test.environment);
             console.info('\tAll tokens ready');
 
         } catch (e) {
