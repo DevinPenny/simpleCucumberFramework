@@ -31,7 +31,7 @@ const elements = {
  */
 module.exports = {
     /**
-     * Navigate to the passport login page (admin or subscriber) and sign in as a user
+     * Navigate to the login page and sign in as a user
      *
      * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
      * @param {string} page - The HTML page to visit. Either admin or subscriber
@@ -39,18 +39,18 @@ module.exports = {
      * @param {string} title - title of the page
      * @return {Promise} The result of the [navigateToPage] method.
      */
-    navigateToLogin: async (world, page, account, title = 'Passport Portal') => {
+    navigateToLogin: async (world, page, account, title = 'default') => {
         await Page.navigateToPage(world, `${world.envData[page]}`, title, 3);
         await Page.enterText(world, Page.locators.byId(elementMap.nameField), get(world.envData, `users.${account}.id`, ''));
         await Page.enterText(world, Page.locators.byId(elementMap.passField), get(world.envData, `users.${account}.pass`, ''));
         await Page.clickElement(world, Page.locators.byId(elementMap.signInButton));
         //check for an error
-        // const errors = await Page.getElementCount(world, locator);
-        //
-        // if (errors > 0) {
-        //     const errorMessage = await Page.getText(world, locator);
-        //     throw new Error(`Could not do the thing got error: ${errorMessage}`);
-        // }
+        const errors = await Page.getElementCount(world, elements.loginError);
+
+        if (errors > 0) {
+            const errorMessage = await Page.getText(world, elements.loginError);
+            throw new Error(`Could not do the thing got error: ${errorMessage}`);
+        }
     },
 
     /**
@@ -84,15 +84,4 @@ module.exports = {
         //If the page takes too long to load after logging in, increase the wait here.
         await Page.refreshPage(world);
     },
-
-    /**
-     * wait for a number of seconds
-     * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
-     * @param seconds {string/number} - the number of seconds to wait
-     * @returns {Promise<void>}
-     */
-    waitSeconds: async (world, seconds = 10) => {
-        await Page.waitSeconds(world, seconds)
-    },
-
 };

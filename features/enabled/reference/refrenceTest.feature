@@ -1,7 +1,7 @@
 @referenceTest
 Feature: referenceTest.feature
 
-  This is a an example feature to demonstrate how to write automated test steps for the passport application
+  This is a an example feature to demonstrate how to write automated test steps
 
   @TEST1
   Scenario: TEST1 verify cucumber and selenium can open a page and verify the url
