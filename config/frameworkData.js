@@ -28,7 +28,7 @@ module.exports = {
         to_mail: 'pass'
     },
     gridData: {
-        homeGrid: "https://some-url.com/wd/hub",
-        browserStackGrid: "https://hub.browserstack.com/wd/hub",
+        homeGrid: 'https://some-url.com/wd/hub',
+        browserStackGrid: 'http://devinpenny_o8VUT5:mUmAUpMqdxLwa2YYATj5@hub-cloud.browserstack.com/wd/hub',
     }
 };

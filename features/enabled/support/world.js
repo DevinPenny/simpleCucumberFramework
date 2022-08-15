@@ -8,7 +8,7 @@ const frameworkData = require('../../../config/frameworkData');
 const buildDriver = () => {
 
     /**
-     * Setup default browser capabilities.
+     * Setup default browser and local/grid capabilities.
      *
      * @property {object} capabilities - A browser `capabilities` object.
      * @property {string} capabilities.browserName=<config.browser.name> - The name of the browser.
@@ -26,59 +26,40 @@ const buildDriver = () => {
         takesScreenshot: true,
     };
 
-
-    const parallelTestBaseCapability = {
-        buildName: "BStack Build Number 1",
-        local: false,
-        seleniumVersion: "4.0.0",
-        userName: process.env["BROWSERSTACK_USERNAME"] || "devinpenny_o8VUT5",
-        accessKey: process.env["BROWSERSTACK_ACCESS_KEY"] || "mUmAUpMqdxLwa2YYATj5"
-    };
-
-    let browserStackCapabilities = [
-        {
-            'bstack:options': {
-                os: "OS X",
-                osVersion: "Sierra",
-                sessionName: "Parallel test 1",
-                ...parallelTestBaseCapability
-            },
-            browserName: "Chrome",
-            browserVersion: "latest",
+    //TODO: implement parameters from command line to setup test configurations.
+    // need a profile loading system to provide os, browser, and versions
+    const browserStackCapabilities = {
+        'bstack:options': {
+            "os": "OS X",
+            "osVersion": "Big Sur",
+            "buildName": "browserstack-build-1",
+            "sessionName": "Parallel test 3",
         },
-        {
-            'bstack:options': {
-                os: "OS X",
-                osVersion: "Sierra",
-                sessionName: "Parallel test 2",
-                ...parallelTestBaseCapability
-            },
-            browserName: "Safari",
-            browserVersion: "latest",
-        },
-        {
-            'bstack:options': {
-                os: "windows",
-                osVersion: "11",
-                sessionName: "Parallel test 3",
-                ...parallelTestBaseCapability
-            },
-            browserName: "Chrome",
-            browserVersion: "latest",
-        },
-    ];
+        browserName: "chrome",
+        browserVersion: "104.0",
+    }
 
-    /** Either use the grid or run locally. */
-    if (config.grid.useGrid === true){
-        return new webdriver.Builder()
-            .withCapabilities(config.grid.gridType.toLowerCase() === 'browserstack' ? browserStackCapabilities : basicCapabilities)
-            .usingServer(config.grid.gridType.toLowerCase() === 'browserstack' ? frameworkData.gridData.browserStackGrid : frameworkData.gridData.homeGrid)
-            .build();
+    /** Either use a grid or run locally. */
+    if (config.grid.useGrid === true) {
+
+        switch (config.grid.gridType.toLowerCase()) {
+            case 'browserstack':
+                return new webdriver.Builder()
+                    .usingServer(frameworkData.gridData.browserStackGrid)
+                    .withCapabilities({
+                        ...browserStackCapabilities,
+                        ...browserStackCapabilities['browserName'] && {browserName: browserStackCapabilities['browserName']}  // Because NodeJS language binding requires browserName to be defined
+                    })
+                    .build();
+            case 'homegrid':
+                return new webdriver.Builder().withCapabilities(basicCapabilities).usingServer(config.grid.homeGrid).build();
+            default:
+                return new webdriver.Builder().withCapabilities(basicCapabilities).build();
+        }
 
     } else {
         return new webdriver.Builder().withCapabilities(basicCapabilities).build();
     }
-
 };
 
 
@@ -112,4 +93,4 @@ function CustomWorld({attach, parameters}) {
 setWorldConstructor(CustomWorld);
 
 /** After we have created world, set the default timeout for all steps. */
-setDefaultTimeout(240*1000);
+setDefaultTimeout(240 * 1000);
