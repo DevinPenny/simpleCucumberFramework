@@ -436,7 +436,10 @@ async function verifyPageTitle(world, title) {
  * @returns {Promise<void>} Assertion that the URl contains the string input.
  */
 async function verifyPageUrlContains(world, url) {
-    await world.driver.getCurrentUrl().should.eventually.contain(url, 'The page url is not correct');
+    //Get the URL so that we can provide it in an error message if there is a failure.
+    const foundURL = await world.driver.getCurrentUrl();
+
+    await world.driver.getCurrentUrl().should.eventually.contain(url, `The page url ${foundURL} is not correct`);
 }
 
 

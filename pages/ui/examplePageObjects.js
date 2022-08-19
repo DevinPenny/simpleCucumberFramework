@@ -17,11 +17,22 @@ const elementMap = {
 };
 
 /**
- * elements is used to identify elements on a page by a specific locator, and does not need to be used with Page.locators
+ * elements are used to identify elements on a page by a specific locator, and does not need to be used with Page.locators
  * @type {{loginError: !By}}
  */
 const elements = {
+    //a possible means to get all error messages on a page.
     loginError: By.css('.error'),
+
+    //dynamic locators that you provide strings in order to find desired or indexed elements
+    inputFieldById: (label) => By.css(`input[id*="${label}"]`),
+    inputFieldByName: (label) => By.css(`[name*="${label}"]`),
+
+    //get specific column contents with a single locator when an index is provided
+    tableColumns: (index) => By.css(`table tbody > tr > td:nth-child(${index}) > div`),
+
+    //you can use the "not" operator to identify elements only under specific circumstances, such as when a loading spinner is present or not
+    loadingElementGone: By.css('[class*="someClass"] > [class*="--menuContainer"] ~ div:not([class*="--loading"])'),
 };
 
 /**
@@ -54,7 +65,30 @@ module.exports = {
     },
 
     /**
-     * Uses the [navigateToPage]{@link module:uiBaseObjects.navigateToPage} method to load the login page, then authenticates using the API and sets a `user` cookie with the generated token.  Finally, refresh the page so the authentication cookie is read, and the app finally loads the default user page.
+     * Click on the save button and verify no errors appear on the page.
+     *
+     * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
+     * @return {Promise} [Chai as Promised]{@link https://github.com/domenic/chai-as-promised} assertion that the save app engine button was clicked.
+     */
+    async clickSave(world) {
+        await Page.clickElement(world, elements.saveButton);
+
+        await Page.waitSeconds(world, .5);
+
+        const saveFailed = await Page.getTexts(world, elements.pageErrors);
+
+        if (saveFailed > 0) {
+            const errorMessage = await Page.getText(world, elements.pageErrors);
+            throw new Error(`An error occurred when saving the new app engine: ${errorMessage}`);
+        }
+
+    },
+
+
+    /**
+     * Uses the [navigateToPage]{@link module:uiBaseObjects.navigateToPage} method to load the login page, then
+     * authenticates using the API and sets a `user` cookie with the generated token.
+     * Finally, refresh the page so the authentication cookie is read, and the app finally loads the default user page.
      *
      * @param {object} world - The custom [Cucumber World]{@link https://github.com/cucumber/cucumber-js/blob/master/docs/support_files/world.md} instance.
      * @param {string} account - The account being used for the test.
@@ -64,7 +98,7 @@ module.exports = {
      */
     async authenticateWithToken(world, account, title, ignoreUrl = false) {
         await Page.navigateToPage(world, get(world.envData, 'domain', '') + '/login', title, 1, ignoreUrl);
-        //store the account info in world so we can use it later
+        //store the account info in world in order to use it later
         world.account = account;
 
         if (world.config.users[account].noTest) {
