@@ -131,7 +131,7 @@ async function getText(world, locator) {
  * @return {void}
  */
 async function enterText(world, locator, text, ignore = false, message = '', visibleWait = true) {
-    const input = (visibenterTextleWait) ? await waitToBeVisible(world, locator, message) : await waitToBeLocated(world, locator, message);
+    const input = (visibleWait) ? await waitToBeVisible(world, locator, message) : await waitToBeLocated(world, locator, message);
 
     if (!ignore) {
         await clearField(world, locator);

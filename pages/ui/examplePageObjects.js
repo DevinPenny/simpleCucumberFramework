@@ -52,7 +52,7 @@ module.exports = {
      */
     navigateToLogin: async (world, page, account, title = 'default') => {
         await Page.navigateToPage(world, `${world.envData[page]}`, title, 3);
-        await Page.(world, Page.locators.byId(elementMap.nameField), get(world.envData, `users.${account}.id`, ''));
+        await Page.enterText(world, Page.locators.byId(elementMap.nameField), get(world.envData, `users.${account}.id`, ''));
         await Page.enterText(world, Page.locators.byId(elementMap.passField), get(world.envData, `users.${account}.pass`, ''));
         await Page.clickElement(world, Page.locators.byId(elementMap.signInButton));
         //check for an error
