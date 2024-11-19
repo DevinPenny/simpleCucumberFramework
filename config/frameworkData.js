@@ -29,6 +29,6 @@ module.exports = {
     },
     gridData: {
         homeGrid: 'https://some-url.com/wd/hub',
-        browserStackGrid: 'http://devinpenny_o8VUT5:mUmAUpMqdxLwa2YYATj5@hub-cloud.browserstack.com/wd/hub',
+        browserStackGrid: 'http://something.browserstack.com/wd/hub',
     }
 };
